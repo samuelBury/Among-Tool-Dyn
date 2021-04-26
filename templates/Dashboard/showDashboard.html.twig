@@ -60,7 +60,14 @@
 
 
 
+
+
             {% endfor %}
+            <td>
+                <div class="d-flex flex-column bd-highlight mb-3">
+                <a href="{{ path('delLigne',{idDash: Dash.id, ligneId: ligne.id}) }}"><button  type="button" class="btn btn-outline-dark"><i class="fas fa-minus"></i></button></a>
+                </div>
+            </td>
             {% set i =i+1 %}
         </tr>
 

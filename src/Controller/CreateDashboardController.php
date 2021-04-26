@@ -188,4 +188,29 @@ class CreateDashboardController extends AbstractController
 
         return $this->redirectToRoute('configDashboard',['idDash'=>$idDash]);
     }
+    /**
+     * @Route("/deleteLigne/{idDash}/{ligneId}", name="delLigne")
+     */
+    public function deleteLigne($ligneId,$idDash,LigneRepository $ligneRepo,DashboardRepository $dashRepo,ColonneRepository $colRepo,EntityManagerInterface $em): Response
+    {
+
+        $ligne = $ligneRepo->find($ligneId);
+        foreach ($ligne->getCarre() as $uneCase){
+            $em->remove($uneCase);
+        }
+        $em->remove($ligne);
+        $em->flush();
+
+
+        $colonnesRempli =null;
+        $dash= $dashRepo->find($idDash);
+        $colonnes= $colRepo->findByIdDashboard($idDash);
+
+        if (count($dash->getColonnes())>0){
+            $colonnesRempli=true;
+        }
+
+
+        return $this->render('Dashboard/showDashboard.html.twig', ['Dash'=>$dash,'structure'=>$colonnesRempli,'colonnes'=>$colonnes]);
+    }
 }
