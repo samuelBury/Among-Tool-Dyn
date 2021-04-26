@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateDashboardController!{% endblock %}
+
+{% block body %}
+    {% if structure is null %}
+    <div class="alert alert-warning" role="alert">
+        Dashboard is not structured configure it !
+    </div>
+    {% endif %}
+    <div class="container">
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a href="{{ path('configDashboard', {idDash: Dash.id})}}"><button class="btn btn-primary" type="button">Configurer Dachboard</button></a>
+        </div>
+    </div>
+    <div class="container">
+        <form method="post" action="{{ path('dashboardShow', {idDash: Dash.id}) }}">
+    <table class="table">
+        <thead>
+        <tr>
+            <script type="text/javascript">
+                var Col = [];
+                var j=-1;
+
+            </script>
+            {% for colonne in colonnes %}
+            <th scope="col">{{ colonne.name}}</th>
+            <script type="text/javascript">
+                Col.push(["{{ colonne.type }}","{{ colonne.name }}"])
+            </script>
+            {% endfor %}
+
+        </tr>
+        </thead>
+        <tbody id="body">
+        {% set i =0 %}
+
+        {% for ligne in Dash.lignes %}
+
+
+
+        <tr>
+
+            {% for case in ligne.carre %}
+
+            <td>
+                {% if case.colonne.type == 'date' %}
+                    <div class="d-flex flex-column bd-highlight mb-3">
+                    <label>{{ case.Valeur|date("d/m/Y") }}</label>
+                        <input type="{{ case.colonne.type }}"  name="{{ case.id }}?{{ case.colonne.name }}{{ i }}a" ></div>
+                {% else %}
+                    <div class="d-flex flex-column bd-highlight mb-3">
+                    <label>{{ case.Valeur }}</label>
+                    <input type="{{ case.colonne.type }}"  name="{{ case.id }}?{{ case.colonne.name }}{{ i }}a"></div>
+                    {% endif %}
+            </td>
+
+
+
+
+
+
+            {% endfor %}
+            {% set i =i+1 %}
+        </tr>
+
+
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+
+
+        <p class="text-center">
+            <button id="addLigne" type="button" class="btn btn-outline-dark"><i  class="fas fa-plus"></i></button>
+        </p>
+            <p class="text-start">
+                <button class="btn btn-primary" type="submit">submit</button>
+            </p>
+        </form>
+    </div>
+    <script type="text/javascript">
+
+
+
+        function  addLigneForm(){
+            j++;
+            var body = document.getElementById('body');
+            var tr = document.createElement('tr');
+            for(let i=0;i<Col.length;i++){
+
+                var input = document.createElement("input");
+                var td = document.createElement("td");
+                input.setAttribute("type",Col[i][0]);
+                input.setAttribute("name",Col[i][1]+j);
+                td.appendChild(input);
+                tr.appendChild(td);
+
+
+            }
+            body.insertAdjacentElement('beforeend',tr);
+        }
+        document.getElementById('addLigne').addEventListener("click",addLigneForm);
+
+    </script>
+
+{% endblock %}

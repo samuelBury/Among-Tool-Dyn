@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateDashboardController!{% endblock %}
+
+{% block body %}
+    {% if alertes is defined %}
+    {% for message in alertes  %}
+    <div class="alert alert-{{ message.type }}" role="alert">
+        {{message.text}}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="container">
+
+
+    <form action="{{ path('createDashboard') }}" method="post">
+        <fieldset >
+
+            <div class="mb-3">
+                <label for="dashboardNameInput" class="form-label">Dashboard name</label>
+                <input type="text" id="dashboardNameInput" name="DashboardName" class="form-control" >
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </fieldset>
+    </form>
+    </div>
+{% endblock %}

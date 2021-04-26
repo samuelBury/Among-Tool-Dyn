@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateDashboardController!{% endblock %}
+
+{% block body %}
+    <script type="text/javascript">
+        var i=-1;
+    </script>
+    <form id="form" method="post" action="{{ path('configDashboard', {idDash: idDash}) }}">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Colomn name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Rank</th>
+        </tr>
+        </thead>
+        <tbody id="body">
+
+        </tbody>
+    </table>
+        <p class="text-center">
+            <button id="addColonne" type="button" class="btn btn-outline-dark"><i  class="fas fa-plus"></i></button>
+        </p>
+        <p class="text-center">
+            <button id="delColonne" type="button" class="btn btn-outline-dark"><i class="fas fa-minus"></i></button>
+        </p>
+        <p class="text-start">
+            <button class="btn btn-primary" type="submit">submit</button>
+        </p>
+
+
+    </form>
+    <script type="text/javascript">
+        function generateColumConfig() {
+
+            {% for col in dash.colonnes %}
+
+
+            i++;
+            var input = document.createElement("input");
+            input.setAttribute("type","text");
+            input.setAttribute('placeholder','{{ col.name }}')
+            input.setAttribute("class","form-control");
+            input.setAttribute("name","columnName"+i);
+            var th = document.createElement("th");
+            th.appendChild(input);
+            var option1 = document.createElement("option");
+            option1.setAttribute("value","Nomber");
+            var texte1 = document.createTextNode('Number');
+            option1.appendChild(texte1);
+            var option2 = document.createElement("option");
+            option2.setAttribute("value","Text");
+            var texte2 = document.createTextNode('Text');
+            option2.appendChild(texte2);
+            var option3 = document.createElement("option");
+            option3.setAttribute("value","Date");
+            var texte3 = document.createTextNode('Date');
+            option3.appendChild(texte3);
+            var option4 = document.createElement("option");
+            option4.setAttribute("value","Document");
+            var texte4 = document.createTextNode('Document');
+            option4.appendChild(texte4);
+            var select = document.createElement('select');
+            select.setAttribute("class","form-select");
+            select.setAttribute("aria-label","Default select example");
+            select.setAttribute("name",'columnType'+i);
+            select.appendChild(option1);
+            select.appendChild(option2);
+            select.appendChild(option3);
+            select.appendChild(option4);
+            var td = document.createElement('td');
+            td.appendChild(select);
+            var td2= document.createElement('td')
+            var input2 = document.createElement('input');
+            input2.setAttribute('class', 'inputRank');
+            input2.setAttribute('type', 'number');
+            input2.setAttribute('min', '0');
+            input2.setAttribute('name','inputRank'+i );
+            input2.setAttribute('placeholder','{{ col.rank }}');
+            td2.appendChild(input2)
+            var td3 = document.createElement('td');
+            var j = document.createElement('i');
+            var a = document.createElement('a');
+            a.setAttribute('href','{{ path('delCol',{colId: col.id}) }}');
+            j.setAttribute('class',"fas fa-minus");
+            a.appendChild(j);
+            td3.appendChild(a);
+
+            var tr = document.createElement('tr');
+            tr.appendChild(th);
+            tr.appendChild(td);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            var body = document.getElementById('body');
+            body.insertAdjacentElement('beforeend', tr);
+
+            var nombreColonne = document.getElementsByClassName('inputRank').length
+            for (let i=0;i<nombreColonne;i++){
+                document.getElementsByClassName('inputRank')[i].setAttribute('max',nombreColonne);
+            }
+            {% endfor %}
+
+
+        }
+        function addColumnForm(){
+            i++;
+            var input = document.createElement("input");
+            input.setAttribute("type","text");
+            input.setAttribute("class","form-control");
+            input.setAttribute("name","columnName"+i);
+            var th = document.createElement("th");
+            th.appendChild(input);
+            var option1 = document.createElement("option");
+            option1.setAttribute("value","number");
+            var texte1 = document.createTextNode('Number');
+            option1.appendChild(texte1);
+            var option2 = document.createElement("option");
+            option2.setAttribute("value","text");
+            var texte2 = document.createTextNode('Text');
+            option2.appendChild(texte2);
+            var option3 = document.createElement("option");
+            option3.setAttribute("value","date");
+            var texte3 = document.createTextNode('Date');
+            option3.appendChild(texte3);
+            var option4 = document.createElement("option");
+            option4.setAttribute("value","file");
+            var texte4 = document.createTextNode('Document');
+            option4.appendChild(texte4);
+            var select = document.createElement('select');
+            select.setAttribute("class","form-select");
+            select.setAttribute("aria-label","Default select example");
+            select.setAttribute("name",'columnType'+i);
+            select.appendChild(option1);
+            select.appendChild(option2);
+            select.appendChild(option3);
+            select.appendChild(option4);
+            var td = document.createElement('td');
+            td.appendChild(select);
+            var td2= document.createElement('td')
+            var input2 = document.createElement('input');
+            input2.setAttribute('class', 'inputRank');
+            input2.setAttribute('type', 'number');
+            input2.setAttribute('min', '0');
+            input2.setAttribute('name','inputRank'+i );
+            td2.appendChild(input2)
+
+
+            var tr = document.createElement('tr');
+            tr.appendChild(th);
+            tr.appendChild(td);
+            tr.appendChild(td2)
+            var body = document.getElementById('body');
+            body.insertAdjacentElement('beforeend', tr);
+
+            var nombreColonne = document.getElementsByClassName('inputRank').length
+            for (let i=0;i<nombreColonne;i++){
+                document.getElementsByClassName('inputRank')[i].setAttribute('max',nombreColonne);
+            }
+
+
+
+        }
+
+        function removeColumnForm(){
+            i--;
+            var body = document.getElementById('body');
+
+            body.lastChild.remove();
+
+
+        }
+
+
+        document.getElementById('addColonne').addEventListener("click",addColumnForm);
+        document.getElementById('delColonne').addEventListener('click',removeColumnForm);
+        document.addEventListener('DOMContentLoaded',generateColumConfig);
+
+    </script>
+
+
+{% endblock %}

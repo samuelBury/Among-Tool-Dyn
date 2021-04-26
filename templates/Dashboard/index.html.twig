@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateDashboardController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a href="{{ path('createDashboard') }}"><button class="btn btn-primary" type="button">Create Dashboard</button></a>
+        </div>
+    </div>
+    <div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Dashboard</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for dash in dashboards %}
+        <tr>
+            <th scope="row"><a href="{{ path('dashboardShow',{idDash:dash.id}) }}"  class="btn btn-outline-primary">{{ dash.name }}</a></th>
+            <th scope="row"><a href="{{ path('deleteDashboard',{idDash: dash.id}) }}" class="btn btn-primary">Delete</a></th>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="container">
+        <div class="d-grid gap-2 col-6 mx-auto">
+
+            <a href="{{ path('createDashboard') }}"><button class="btn btn-primary" type="button">Create Dashboard</button></a>
+        </div>
+    </div>
+{% endblock %}
