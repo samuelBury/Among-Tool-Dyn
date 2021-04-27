@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c9226acf-df02-4e9d-8496-28e1c3bd2ab2" name="Default Changelist" comment="" />
+    <list default="true" id="c9226acf-df02-4e9d-8496-28e1c3bd2ab2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/CreateDashboardController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/CreateDashboardController.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,6 +13,9 @@
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
@@ -154,7 +160,9 @@
       <workItem from="1619166261057" duration="21000" />
       <workItem from="1619375373711" duration="1802000" />
       <workItem from="1619423905356" duration="7780000" />
-      <workItem from="1619431909086" duration="8462000" />
+      <workItem from="1619431909086" duration="12140000" />
+      <workItem from="1619460989690" duration="19000" />
+      <workItem from="1619511232119" duration="811000" />
     </task>
     <servers />
   </component>
@@ -166,10 +174,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="167" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.824@0.0.1536.824" timestamp="1618481851637" />
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1619166279304">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1619461007549">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1619166279304" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1619461007549" />
     <state x="486" y="184" key="refactoring.ChangeSignatureDialog" timestamp="1618494347381">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

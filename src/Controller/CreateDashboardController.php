@@ -11,6 +11,7 @@ use App\Repository\DashboardRepository;
 use App\Repository\LigneRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,8 @@ class CreateDashboardController extends AbstractController
 {
     /**
      * @Route("/dashboard", name="dashboard")
+     * @param DashboardRepository $dashRepo
+     * @return Response
      */
     public function index(DashboardRepository $dashRepo): Response
     {
@@ -34,7 +37,10 @@ class CreateDashboardController extends AbstractController
     /**
      * @Route("/create/dashboard", name="createDashboard")
      * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param DashboardRepository $dashRepo
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function createDash(Request $request, EntityManagerInterface $em, DashboardRepository $dashRepo): Response
     {
@@ -65,14 +71,29 @@ class CreateDashboardController extends AbstractController
             'alertes' => $alerte,
         ]);
     }
+
     /**
      * @Route("/delete/dashboard/{idDash}", name="deleteDashboard")
+     * @param DashboardRepository $dashRepo
+     * @param $idDash
+     * @param EntityManagerInterface $em
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function delete(DashboardRepository $dashRepo,$idDash ,EntityManagerInterface $em): Response
     {
         dump((int)$idDash);
         $dashboard =$dashRepo->findOneById((int)$idDash);
         dump($dashboard);
+        foreach ($dashboard->getLignes() as $unLigne){
+            foreach ($unLigne->getCarre() as $uneCase){
+                $em->remove($uneCase);
+            }
+            $em->remove($unLigne);
+        }
+        foreach ($dashboard->getColonnes() as $uneColonne){
+            $em->remove($uneColonne);
+        }
         $em->remove($dashboard);
         $em->flush();
         $this->redirectToRoute('dashboard');
@@ -88,6 +109,10 @@ class CreateDashboardController extends AbstractController
      * @Route("/dashboard/{idDash}", name="dashboardShow")
      * @param $idDash
      * @param ColonneRepository $colRepo
+     * @param Request $request
+     * @param DashboardRepository $dashRepo
+     * @param EntityManagerInterface $em
+     * @param CarreRepository $repoCase
      * @return Response
      */
     public function show($idDash,ColonneRepository $colRepo ,Request $request,DashboardRepository $dashRepo,EntityManagerInterface $em, CarreRepository $repoCase): Response
@@ -140,8 +165,14 @@ class CreateDashboardController extends AbstractController
 
         ]);
     }
+
     /**
      * @Route("/configDashboard/{idDash}", name="configDashboard")
+     * @param $idDash
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param DashboardRepository $repo
+     * @return Response
      */
     public function config($idDash ,Request $request,EntityManagerInterface $em, DashboardRepository $repo): Response
     {
@@ -169,8 +200,13 @@ class CreateDashboardController extends AbstractController
 
         ]);
     }
+
     /**
      * @Route("/deleteColonne/{colId}", name="delCol")
+     * @param $colId
+     * @param ColonneRepository $colRepo
+     * @param EntityManagerInterface $em
+     * @return Response
      */
     public function deleteCol($colId, ColonneRepository $colRepo, EntityManagerInterface $em): Response
     {
@@ -188,8 +224,16 @@ class CreateDashboardController extends AbstractController
 
         return $this->redirectToRoute('configDashboard',['idDash'=>$idDash]);
     }
+
     /**
      * @Route("/deleteLigne/{idDash}/{ligneId}", name="delLigne")
+     * @param $ligneId
+     * @param $idDash
+     * @param LigneRepository $ligneRepo
+     * @param DashboardRepository $dashRepo
+     * @param ColonneRepository $colRepo
+     * @param EntityManagerInterface $em
+     * @return Response
      */
     public function deleteLigne($ligneId,$idDash,LigneRepository $ligneRepo,DashboardRepository $dashRepo,ColonneRepository $colRepo,EntityManagerInterface $em): Response
     {
