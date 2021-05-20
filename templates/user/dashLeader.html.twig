@@ -3,6 +3,13 @@
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
+    {% if erreur is not null %}
+    <div class="alert alert-warning" role="alert">
+        {{ erreur }}
+    </div>
+    {% endif %}
+
+
     <div class="d-flex flex-row">
 <div class="container">
     <form action="{{ path('users') }}" method="post">
@@ -17,19 +24,39 @@
             <label for="exampleInputPassword1">Password</label>
             <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
         </div>
-        <div class="form-group">
-            <label for="exampleInputPseudo">Pseudo</label>
-            <input type="password" name="pseudo" class="form-control" id="exampleInputPseudo" placeholder="Pseudo">
-        </div>
+
         <div class="form-group container">
-            <label for="inputGroupSelect">Choose the dashboard the leader is in charge</label>
-            <select class="custom-select" name="dashboard" id="inputGroupSelect">
-                <option selected></option>
-                {% for dash in dashboards %}
-                <option value="{{ dash.id }}">{{ dash.name }}</option>
-                {% endfor %}
-            </select>
-            <small  class="form-text text-muted">if you don't choose one, a dashboard with the pseudo leader will be create</small>
+            <table class="table">
+
+                <thead>
+                <!-- En-tête du tableau -->
+
+                </thead>
+
+
+
+                <tbody>
+                <!-- Corps du tableau -->
+                <tr>
+                    <td>Create dashboard</td>
+                    <td> <input type="checkbox" id="scales" name="1"></td>
+
+                </tr>
+
+                <tr>
+                    <td>Configure dashboard</td>
+                    <td><input type="checkbox" id="scales" name="3"></td>
+
+                </tr>
+                <tr>
+                    <td>Delete dashboard</td>
+                    <td><input type="checkbox" id="scales" name="4"></td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
         </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
@@ -45,6 +72,37 @@
                     <option value="{{ user.id }}">{{ user.email }}</option>
                 {% endfor %}
             </select>
+            <table class="table">
+
+                <thead>
+                <!-- En-tête du tableau -->
+
+                </thead>
+
+
+
+                <tbody>
+                <!-- Corps du tableau -->
+                <tr>
+                    <td>Create dashboard</td>
+                    <td> <input type="checkbox" id="scales" name="1"></td>
+
+                </tr>
+
+                <tr>
+                    <td>Configure dashboard</td>
+                    <td><input type="checkbox" id="scales" name="3"></td>
+
+                </tr>
+                <tr>
+                    <td>Delete dashboard</td>
+                    <td><input type="checkbox" id="scales" name="4"></td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
         </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

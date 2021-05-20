@@ -6,6 +6,7 @@ use App\Entity\Dashboard;
 use App\Entity\Gerer;
 use App\Entity\PossederDroitDash;
 use App\Entity\User;
+use App\Repository\PossederDroitDashRepository;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -68,17 +69,17 @@ class UserController extends AbstractController
      * @param EntityManagerInterface $em
      * @return Response
      */
-    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em): Response
+    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
     {
 
 
-
+        $erreur=null;
         $mailObject = "Among-tool password";
         $mailMessage = "Votre mot de passe pour acceder à votre espace Among-tool est : ";
         $mailMessage2 = " Vous pourrez ensuite changer votre mot de passe depuis votre espace";
 
         /* recuperer les dashboards*/
-        $dashs=$dashboardRepository->findAll();
+
         $users = $userRepository->findAll();
 
         /* recuperer les users*/
@@ -88,32 +89,56 @@ class UserController extends AbstractController
         /* creer un leader-dash */
         $emailLeader = $request->request->get('email');
         $passwordLeader = $request->request->get('password');
-        $pseudoLeader = $request->request->get('pseudo');
-        $dashboardId = $request->request->get('dashboard');
+        $createDash = $request->request->get('1');
+        $configDash = $request->request->get('3');
+        $deleteDash = $request->request->get('4');
 
-        if ($emailLeader != null && $passwordLeader!=null && $pseudoLeader!=null){
+
+
+        if ($emailLeader != null && $passwordLeader!=null ){
 
             $user = new User();
             $user->setEmail($emailLeader);
             $user->setPassword($passwordEncoder->encodePassword($user,$passwordLeader));
-            dump($user->getPassword());
-            $user->setPseudo($pseudoLeader);
+            $em->persist($user);
 
-            $possederDroitDash = new PossederDroitDash();
-            if($dashboardId!=null){
-                $dashboard= new Dashboard();
-                $dashboard->setName($pseudoLeader.'dash');
-                $em->persist($dashboard);
+
+
+            if($createDash === 'on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(1));
+                $em->persist($possederDroitDash);
+            }
+            if($configDash==='on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(3));
+                $em->persist($possederDroitDash);
+            }
+            if($deleteDash==='on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(4));
+                $em->persist($possederDroitDash);
+            }
+            if ($deleteDash==null && $configDash==null&& $createDash==null){
+                $erreur = "aucun droit n'a été accorder";
+
             }
             else{
-                $possederDroitDash->setDashboard($dashboardRepository->find((string)$dashboardId));
-            }
-            $possederDroitDash->setUser($user);
-            $possederDroitDash->setDroitDash($droitDashRepository->find(1));
 
-            $em->persist($user);
-            $em->persist($possederDroitDash);
-            $em->flush();
+                $em->flush();
+
+            }
+
+            }
+
+
+
+
+
+
             /*$email = new Email();
             $email->from("samy.bury@gmail.com")
                 ->to($emailLeader)
@@ -123,7 +148,6 @@ class UserController extends AbstractController
                 ->html("<h1>votre mot de passe est : ".$passwordLeader."</h1>");
             $mailer->send($email);
             */
-        }
 
 
 
@@ -132,6 +156,7 @@ class UserController extends AbstractController
 
 
 
-        return $this->render('user/dashLeader.html.twig',["dashboards"=>$dashs, "users"=>$users]);
+
+        return $this->render('user/dashLeader.html.twig',["users"=>$users,"erreur"=>$erreur]);
     }
 }

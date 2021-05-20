@@ -22,10 +22,7 @@ class PossederDroitDash
      */
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Dashboard::class, inversedBy="possederDroitDashes")
-     */
-    private $dashboard;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=DroitDash::class, inversedBy="possederDroitDash")
@@ -49,10 +46,6 @@ class PossederDroitDash
         return $this;
     }
 
-    public function getDashboard(): ?Dashboard
-    {
-        return $this->dashboard;
-    }
 
     public function setDashboard(?Dashboard $dashboard): self
     {

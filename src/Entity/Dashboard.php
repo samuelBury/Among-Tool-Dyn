@@ -44,11 +44,17 @@ class Dashboard
      */
     private $possederDroitDashes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TravaillerSur::class, mappedBy="Dashboard")
+     */
+    private $travaillerSurs;
+
     public function __construct()
     {
         $this->colonnes = new ArrayCollection();
         $this->lignes = new ArrayCollection();
         $this->possederDroitDashes = new ArrayCollection();
+        $this->travaillerSurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +237,36 @@ class Dashboard
             // set the owning side to null (unless already changed)
             if ($possederDroitDash->getDashboard() === $this) {
                 $possederDroitDash->setDashboard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TravaillerSur[]
+     */
+    public function getTravaillerSurs(): Collection
+    {
+        return $this->travaillerSurs;
+    }
+
+    public function addTravaillerSur(TravaillerSur $travaillerSur): self
+    {
+        if (!$this->travaillerSurs->contains($travaillerSur)) {
+            $this->travaillerSurs[] = $travaillerSur;
+            $travaillerSur->setDashboard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTravaillerSur(TravaillerSur $travaillerSur): self
+    {
+        if ($this->travaillerSurs->removeElement($travaillerSur)) {
+            // set the owning side to null (unless already changed)
+            if ($travaillerSur->getDashboard() === $this) {
+                $travaillerSur->setDashboard(null);
             }
         }
 

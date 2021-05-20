@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Repository\GererRepository;
+use App\Repository\PossederDroitDashRepository;
+use App\Repository\TravaillerSurRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,14 +49,17 @@ class User implements UserInterface
     private $possederDroitDashes;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity=TravaillerSur::class, mappedBy="User")
      */
-    private $pseudo;
+    private $travaillerSurs;
+
+
 
     public function __construct()
     {
         $this->gerer = new ArrayCollection();
         $this->possederDroitDashes = new ArrayCollection();
+        $this->travaillerSurs = new ArrayCollection();
 
     }
 
@@ -84,6 +90,31 @@ class User implements UserInterface
         $this->password = $password;
 
         return $this;
+    }
+    public function getDashboard(TravaillerSurRepository $posRepo){
+        $posseders=$posRepo->findByUser($this->getId());
+        $dashboards= array();
+        foreach ($posseders as $pos){
+            $dashboards[]= $pos->getDashboard();
+        }
+        return $dashboards;
+
+    }
+    public function getDroitDashBoard(PossederDroitDashRepository $posRepo){
+        $posseders = $posRepo->findByUser($this->getId());
+        $droits = array();
+        foreach ($posseders as $pos){
+            $droits[]= $pos->getDroitDash();
+        }
+        return $droits;
+    }
+    public function getDroitColonne(GererRepository $gererRepo){
+        $gerers = $gererRepo->findByUser($this->getId());
+        $droits = array();
+        foreach ($gerers as $ger){
+            $droits[]= $ger->getDroit();
+        }
+        return $droits;
     }
 
     /**
@@ -180,5 +211,35 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * @return Collection|TravaillerSur[]
+     */
+    public function getTravaillerSurs(): Collection
+    {
+        return $this->travaillerSurs;
+    }
+
+    public function addTravaillerSur(TravaillerSur $travaillerSur): self
+    {
+        if (!$this->travaillerSurs->contains($travaillerSur)) {
+            $this->travaillerSurs[] = $travaillerSur;
+            $travaillerSur->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTravaillerSur(TravaillerSur $travaillerSur): self
+    {
+        if ($this->travaillerSurs->removeElement($travaillerSur)) {
+            // set the owning side to null (unless already changed)
+            if ($travaillerSur->getUser() === $this) {
+                $travaillerSur->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
