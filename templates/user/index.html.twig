@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <form>
+        <h1>Create an user</h1>
+        <div class="container mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" name="emailUser" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="container mb-3">
+            <label  class="form-label">dashboard rights</label>
+            <table class="table">
+                <thead>
+                <tr>
+
+                    <th scope="col">Global right</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Colonne ajouter colonne  : <input class="form-check-input" type="checkbox" value="ajoutColonne" id="flexCheckDisabled" ></th>
+
+                </tr>
+                <tr>
+
+                    <th scope="row">Colonne supprimer colonne  : <input class="form-check-input" type="checkbox" value="supColonne" id="flexCheckDisabled" ></th>
+                </tr>
+                <tr>
+                    <th scope="row">tous les droits de structure dashbaord  : <input class="form-check-input" type="checkbox" value="allRightColonne" id="flexCheckDisabled" ></th>
+                </tr>
+                </tbody>
+            </table>
+            {% for column in dash.colonnes  %}
+            <table class="table">
+                <thead>
+                <tr>
+
+                    <th scope="col">Right on {{ column.name }}</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <th scope="row">Lire {{ column.name}}  : <input class="form-check-input" type="checkbox" value="lire{{ column.name }}" id="flexCheckDisabled" ></th>
+
+                    </tr>
+                    <tr>
+                    <th scope="row">Ajouter {{ column.name}}  : <input class="form-check-input" type="checkbox" value="ajout{{ column.name }}" id="flexCheckDisabled" ></th>
+
+                    </tr>
+                    <tr>
+
+                    <th scope="row">Supprimer {{ column.name}}  : <input class="form-check-input" type="checkbox" value="sup{{ column.name }}" id="flexCheckDisabled" ></th>
+                    </tr>
+                    <tr>
+                    <th scope="row">Modier {{ column.name}} : <input class="form-check-input" type="checkbox" value="modifier{{ column.name }}" id="flexCheckDisabled" ></th>
+                </tr>
+
+                </tbody>
+            </table>
+            {% endfor %}
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

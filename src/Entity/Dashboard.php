@@ -39,10 +39,16 @@ class Dashboard
      */
     private $lignes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PossederDroitDash::class, mappedBy="dashboard")
+     */
+    private $possederDroitDashes;
+
     public function __construct()
     {
         $this->colonnes = new ArrayCollection();
         $this->lignes = new ArrayCollection();
+        $this->possederDroitDashes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +201,36 @@ class Dashboard
             // set the owning side to null (unless already changed)
             if ($ligne->getDashboard() === $this) {
                 $ligne->setDashboard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PossederDroitDash[]
+     */
+    public function getPossederDroitDashes(): Collection
+    {
+        return $this->possederDroitDashes;
+    }
+
+    public function addPossederDroitDash(PossederDroitDash $possederDroitDash): self
+    {
+        if (!$this->possederDroitDashes->contains($possederDroitDash)) {
+            $this->possederDroitDashes[] = $possederDroitDash;
+            $possederDroitDash->setDashboard($this);
+        }
+
+        return $this;
+    }
+
+    public function removePossederDroitDash(PossederDroitDash $possederDroitDash): self
+    {
+        if ($this->possederDroitDashes->removeElement($possederDroitDash)) {
+            // set the owning side to null (unless already changed)
+            if ($possederDroitDash->getDashboard() === $this) {
+                $possederDroitDash->setDashboard(null);
             }
         }
 

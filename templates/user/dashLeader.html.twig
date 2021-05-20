@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-row">
+<div class="container">
+    <form action="{{ path('users') }}" method="post">
+        <div class="form-group">
+
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPseudo">Pseudo</label>
+            <input type="password" name="pseudo" class="form-control" id="exampleInputPseudo" placeholder="Pseudo">
+        </div>
+        <div class="form-group container">
+            <label for="inputGroupSelect">Choose the dashboard the leader is in charge</label>
+            <select class="custom-select" name="dashboard" id="inputGroupSelect">
+                <option selected></option>
+                {% for dash in dashboards %}
+                <option value="{{ dash.id }}">{{ dash.name }}</option>
+                {% endfor %}
+            </select>
+            <small  class="form-text text-muted">if you don't choose one, a dashboard with the pseudo leader will be create</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+    <div class="container">
+        <form action="{{ path('users') }}" method="post">
+        <div class="form-group">
+            <label for="inputGroupSelect">Email address</label>
+            <select class="custom-select" name="existingUser" id="inputGroupSelect">
+                <option selected></option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.email }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    </div>
+{% endblock %}

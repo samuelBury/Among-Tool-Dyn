@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\Colonne;
 use App\Entity\Dashboard;
 use App\Entity\Ligne;
+use App\Entity\PossederDroitDash;
 use App\Repository\CarreRepository;
 use App\Repository\ColonneRepository;
 use App\Repository\DashboardRepository;
+use App\Repository\DroitDashRepository;
 use App\Repository\LigneRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -20,31 +23,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CreateDashboardController extends AbstractController
 {
-    /**
-     * @Route("/dashboard", name="dashboard")
-     * @param DashboardRepository $dashRepo
-     * @return Response
-     */
-    public function index(DashboardRepository $dashRepo): Response
-    {
-        $dashboards =$dashRepo->findAll();
 
-        return $this->render('Dashboard/index.html.twig', [
-            'dashboards' => $dashboards,
-        ]);
-    }
 
     /**
      * @Route("/create/dashboard", name="createDashboard")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @param DashboardRepository $dashRepo
+     * @param DroitDashRepository $droitDashRepo
+     * @param UserRepository $repoUser
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function createDash(Request $request, EntityManagerInterface $em, DashboardRepository $dashRepo): Response
+    public function createDash(Request $request, EntityManagerInterface $em, DashboardRepository $dashRepo,DroitDashRepository $droitDashRepo,UserRepository $repoUser): Response
     {
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $dashboardName= $request->request->get('DashboardName');
         $alerte=array();
         if($dashboardName==null){
@@ -58,6 +52,11 @@ class CreateDashboardController extends AbstractController
             else{
                 $dash = new Dashboard();
                 $dash->setName($dashboardName);
+                $posseder = new PossederDroitDash();
+                $posseder->setDroitDash($droitDashRepo->find(1));
+                $posseder->setUser($repoUser->find($this->getUser()->getId()));
+                $posseder->setDashboard($dash);
+                $em->persist($posseder);
                 $em->persist($dash);
                 $em->flush();
                 $alerte []= ['text'=>'DashBoard '.$dashboardName.' is created','type'=>'success'];
@@ -82,6 +81,7 @@ class CreateDashboardController extends AbstractController
      */
     public function delete(DashboardRepository $dashRepo,$idDash ,EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         dump((int)$idDash);
         $dashboard =$dashRepo->findOneById((int)$idDash);
         dump($dashboard);
@@ -117,6 +117,7 @@ class CreateDashboardController extends AbstractController
      */
     public function show($idDash,ColonneRepository $colRepo ,Request $request,DashboardRepository $dashRepo,EntityManagerInterface $em, CarreRepository $repoCase): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $colonnesRempli =null;
 
 
@@ -176,6 +177,7 @@ class CreateDashboardController extends AbstractController
      */
     public function config($idDash ,Request $request,EntityManagerInterface $em, DashboardRepository $repo): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
     dump(count($request->request->all()));
         $colonne = new Colonne();
         $dash= $repo->find($idDash);
