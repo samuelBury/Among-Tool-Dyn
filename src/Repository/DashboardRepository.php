@@ -26,7 +26,7 @@ class DashboardRepository extends ServiceEntityRepository
      * @throws NonUniqueResultException
      */
 
-    public function findByName($value): ?Dashboard
+    public function findByNameAndUser($value): ?Dashboard
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.name = :val')

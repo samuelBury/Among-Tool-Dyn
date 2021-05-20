@@ -104,7 +104,7 @@ class User implements UserInterface
         $posseders = $posRepo->findByUser($this->getId());
         $droits = array();
         foreach ($posseders as $pos){
-            $droits[]= $pos->getDroitDash();
+            $droits[]= $pos->getDroitDash()->getLibelle();
         }
         return $droits;
     }

@@ -67,9 +67,11 @@ class UserController extends AbstractController
      * @param DashboardRepository $dashboardRepository
      * @param DroitDashRepository $droitDashRepository
      * @param EntityManagerInterface $em
+     * @param PossederDroitDashRepository $posRepo
+     * @param UserRepository $userRepo
      * @return Response
      */
-    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
+    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder,  \Swift_Mailer $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
     {
 
 
@@ -92,6 +94,8 @@ class UserController extends AbstractController
         $createDash = $request->request->get('1');
         $configDash = $request->request->get('3');
         $deleteDash = $request->request->get('4');
+        $addUser = $request->request->get('5');
+        $existingUser = $request->request->get("existingUser");
 
 
 
@@ -122,6 +126,12 @@ class UserController extends AbstractController
                 $possederDroitDash->setDroitDash($droitDashRepository->find(4));
                 $em->persist($possederDroitDash);
             }
+            if($addUser==='on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(5));
+                $em->persist($possederDroitDash);
+            }
             if ($deleteDash==null && $configDash==null&& $createDash==null){
                 $erreur = "aucun droit n'a été accorder";
 
@@ -129,25 +139,74 @@ class UserController extends AbstractController
             else{
 
                 $em->flush();
+                $message = (new \Swift_Message('hello Email'))
+                    ->setFrom("samy.bury@gmail.com")
+                    ->setTo($emailLeader)
+
+
+                    ->setBody(
+                        $this->renderView('email/newUser.html.twig',
+                            ['name'=>$emailLeader, 'password'=>$passwordLeader]
+                        )
+                    );
+                $mailer->send($message);
 
             }
 
             }
+        elseif ($existingUser!==null){
+            $user = $userRepository->findByEmail($existingUser);
+            if($createDash === 'on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(1));
+                $em->persist($possederDroitDash);
+            }
+            if($configDash==='on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(3));
+                $em->persist($possederDroitDash);
+            }
+            if($deleteDash==='on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(4));
+                $em->persist($possederDroitDash);
+            }
+            if($addUser==='on'){
+                $possederDroitDash = new PossederDroitDash();
+                $possederDroitDash->setUser($user);
+                $possederDroitDash->setDroitDash($droitDashRepository->find(5));
+                $em->persist($possederDroitDash);
+            }
+            if ($deleteDash==null && $configDash==null&& $createDash==null){
+                $erreur = "aucun droit n'a été accorder";
+
+            }
+            else{
+                $message = (new \Swift_Message('hello Email'))
+                    ->setFrom("samy.bury@gmail.com")
+                    ->setTo($emailLeader)
+
+
+                    ->setBody(
+                        $this->renderView('email/newUser.html.twig',
+                            ['name'=>$emailLeader, 'password'=>$passwordLeader]
+                        )
+                    );
+                $mailer->send($message);
+            }
+        }
 
 
 
 
 
 
-            /*$email = new Email();
-            $email->from("samy.bury@gmail.com")
-                ->to($emailLeader)
-                ->priority(Email::PRIORITY_HIGH)
-                ->subject($mailObject)
-                ->text($mailMessage.$passwordLeader.$mailMessage2)
-                ->html("<h1>votre mot de passe est : ".$passwordLeader."</h1>");
-            $mailer->send($email);
-            */
+
+
+
 
 
 

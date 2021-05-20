@@ -2,13 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9226acf-df02-4e9d-8496-28e1c3bd2ab2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ModuleDashboard.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ModuleDashboard.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/CreateDashboardController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/CreateDashboardController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/HomeController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/UserController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Entity/Dashboard.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Dashboard.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/PossederDroitDash.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/PossederDroitDash.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/GererRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/GererRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/DashboardRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/DashboardRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/TravaillerSurRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/TravaillerSurRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/UserRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/UserRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Dashboard/showDashboard.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Dashboard/showDashboard.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home/index.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/user/dashLeader.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user/dashLeader.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -135,6 +146,7 @@
       <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/sendgrid-mailer" />
       <path value="$PROJECT_DIR$/vendor/swiftmailer/swiftmailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/swiftmailer-bundle" />
     </include_path>
   </component>
   <component name="ProjectId" id="1r42WN3aoMYTT55nZc2krRLoQ7o" />
@@ -154,6 +166,11 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\samyb\PhpstormProjects\ModuleDashboard\templates\Dashboard" />
     </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="terminal" />
+    </option>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -186,7 +203,9 @@
       <workItem from="1621325462747" duration="11351000" />
       <workItem from="1621342459536" duration="3836000" />
       <workItem from="1621499839713" duration="13794000" />
-      <workItem from="1621514607565" duration="2704000" />
+      <workItem from="1621514607565" duration="7082000" />
+      <workItem from="1621521770033" duration="2375000" />
+      <workItem from="1621524671289" duration="2101000" />
     </task>
     <servers />
   </component>
@@ -198,11 +217,11 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="574" y="114" key="#com.intellij.ide.util.MemberChooser/0.0.1536.864@0.0.1536.864" timestamp="1621501473706" />
-    <state x="499" y="175" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1621326280729">
+    <state x="499" y="175" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1621520723753">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="499" y="167" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.824@0.0.1536.824" timestamp="1618481851637" />
-    <state x="499" y="175" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.864@0.0.1536.864" timestamp="1621326280729" />
+    <state x="499" y="175" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.864@0.0.1536.864" timestamp="1621520723753" />
     <state x="549" y="175" key="FileChooserDialogImpl" timestamp="1621510012639">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
@@ -216,11 +235,11 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="486" y="184" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1618494347381" />
-    <state x="425" y="196" key="run.anything.popup" timestamp="1621502855866">
+    <state x="425" y="196" width="672" height="677" key="run.anything.popup" timestamp="1621521802966">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1619523387998" />
-    <state x="425" y="196" key="run.anything.popup/0.0.1536.864@0.0.1536.864" timestamp="1621502855866" />
+    <state x="425" y="196" width="672" height="677" key="run.anything.popup/0.0.1536.864@0.0.1536.864" timestamp="1621521802966" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1618579130671">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

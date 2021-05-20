@@ -33,6 +33,21 @@ class TravaillerSurRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @param $value
+     * @return TravaillerSur[] Returns an array of TravaillerSur objects
+     */
+
+    public function findByDashboard($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.Dashboard = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?TravaillerSur

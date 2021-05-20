@@ -15,20 +15,22 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      * @param DashboardRepository $dashRepo
+     * @param TravaillerSurRepository $travaillerSurRepository
      * @param PossederDroitDashRepository $posRepo
      * @return Response
      */
-    public function index(DashboardRepository $dashRepo,TravaillerSurRepository $posRepo): Response
+    public function index(DashboardRepository $dashRepo,TravaillerSurRepository $travaillerSurRepository, PossederDroitDashRepository $posRepo): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $dashboards= array();
         $userConnecte=$this->getUser();
-        $dashboards=$userConnecte->getDashboard($posRepo);
+        $dashboards=$userConnecte->getDashboard($travaillerSurRepository);
+        dump($dashboards);
 
-
+        $droits=$this->getUser()->getDroitDashBoard($posRepo);
 
         return $this->render('home/index.html.twig', [
-            'dashboards' => $dashboards,
+            'dashboards' => $dashboards,'droits'=>$droits
         ]);
     }
 

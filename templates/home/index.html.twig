@@ -10,9 +10,11 @@
         <p>Create tool too manage your team</p>
     </div>
     <div class="container">
+        {% if 'CreateDashboard' in droits %}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="{{ path('createDashboard') }}"><button class="btn btn-primary" type="button">Create Dashboard</button></a>
         </div>
+        {% endif %}
     </div>
     <div class="container">
         <table class="table">
@@ -25,17 +27,19 @@
             {% for dash in dashboards %}
                 <tr>
                     <th scope="row"><a href="{{ path('dashboardShow',{idDash:dash.id}) }}"  class="btn btn-outline-primary">{{ dash.name }}</a></th>
+                    {% if 'DeleteDashboard' in droits %}
                     <th scope="row"><a href="{{ path('deleteDashboard',{idDash: dash.id}) }}" class="btn btn-primary">Delete</a></th>
-
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
     <div class="container">
-        <div class="d-grid gap-2 col-6 mx-auto">
-
-            <a href="{{ path('createDashboard') }}"><button class="btn btn-primary" type="button">Create Dashboard</button></a>
-        </div>
+        {% if 'CreateDashboard' in droits %}
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <a href="{{ path('createDashboard') }}"><button class="btn btn-primary" type="button">Create Dashboard</button></a>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

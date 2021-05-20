@@ -6,6 +6,8 @@ use App\Repository\CarreRepository;
 use App\Repository\ColonneRepository;
 use App\Repository\DashboardRepository;
 use App\Repository\LigneRepository;
+use App\Repository\TravaillerSurRepository;
+use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -199,6 +201,15 @@ class Dashboard
         }
 
         return $this;
+    }
+    public function getUsers(TravaillerSurRepository $travaillerSurRepository, UserRepository $userRepository){
+
+        $users= array();
+        $travaillers=$travaillerSurRepository->findByDashboard($this->getId());
+        foreach ($travaillers as $unTravailleur){
+            $users[]=$userRepository->find($unTravailleur->getUser()->getId());
+        }
+        return $users;
     }
 
     public function removeLigne(Ligne $ligne): self

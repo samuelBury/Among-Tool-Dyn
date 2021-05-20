@@ -6,11 +6,14 @@ use App\Entity\Colonne;
 use App\Entity\Dashboard;
 use App\Entity\Ligne;
 use App\Entity\PossederDroitDash;
+use App\Entity\TravaillerSur;
 use App\Repository\CarreRepository;
 use App\Repository\ColonneRepository;
 use App\Repository\DashboardRepository;
 use App\Repository\DroitDashRepository;
 use App\Repository\LigneRepository;
+use App\Repository\PossederDroitDashRepository;
+use App\Repository\TravaillerSurRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -52,11 +55,11 @@ class CreateDashboardController extends AbstractController
             else{
                 $dash = new Dashboard();
                 $dash->setName($dashboardName);
-                $posseder = new PossederDroitDash();
-                $posseder->setDroitDash($droitDashRepo->find(1));
-                $posseder->setUser($repoUser->find($this->getUser()->getId()));
-                $posseder->setDashboard($dash);
-                $em->persist($posseder);
+                $travaillerSur = new TravaillerSur();
+
+                $travaillerSur->setUser($repoUser->find($this->getUser()->getId()));
+                $travaillerSur->setDashboard($dash);
+                $em->persist($travaillerSur);
                 $em->persist($dash);
                 $em->flush();
                 $alerte []= ['text'=>'DashBoard '.$dashboardName.' is created','type'=>'success'];
@@ -113,16 +116,20 @@ class CreateDashboardController extends AbstractController
      * @param DashboardRepository $dashRepo
      * @param EntityManagerInterface $em
      * @param CarreRepository $repoCase
+     * @param TravaillerSurRepository $travaillerSurRepository
+     * @param UserRepository $userRepository
+     * @param PossederDroitDashRepository $posRepo
      * @return Response
      */
-    public function show($idDash,ColonneRepository $colRepo ,Request $request,DashboardRepository $dashRepo,EntityManagerInterface $em, CarreRepository $repoCase): Response
+    public function show($idDash,ColonneRepository $colRepo ,Request $request,DashboardRepository $dashRepo,EntityManagerInterface $em, CarreRepository $repoCase,TravaillerSurRepository $travaillerSurRepository, UserRepository $userRepository,PossederDroitDashRepository $posRepo): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $colonnesRempli =null;
 
 
         $dash=$dashRepo->find($idDash);
-
+        $users = $dash->getUsers($travaillerSurRepository,$userRepository);
+        $droitsDash= $this->getUser()->getDroitDashBoard($posRepo);
 
         dump($request);
 
@@ -155,6 +162,7 @@ class CreateDashboardController extends AbstractController
 
 
 
+
         $colonnes= $colRepo->findByIdDashboard($idDash);
 
 
@@ -162,7 +170,7 @@ class CreateDashboardController extends AbstractController
             $colonnesRempli=true;
         }
 
-        return $this->render('Dashboard/showDashboard.html.twig', ['Dash'=>$dash,'structure'=>$colonnesRempli,'colonnes'=>$colonnes
+        return $this->render('Dashboard/showDashboard.html.twig', ['Dash'=>$dash,'structure'=>$colonnesRempli,'colonnes'=>$colonnes,'users'=>$users,'DroitDash'=>$droitsDash
 
         ]);
     }

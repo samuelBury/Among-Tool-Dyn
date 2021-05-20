@@ -9,15 +9,13 @@
     </div>
     {% endif %}
     <div class="container">
+        {% if 'ConfigDashboard' in DroitDash %}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="{{ path('configDashboard', {idDash: Dash.id})}}"><button class="btn btn-primary" type="button">Configurer Dachboard</button></a>
         </div>
+        {% endif %}
     </div>
-    <div class="container">
-        <div class="d-grid gap-2 col-6 mx-auto">
-            <a href="{{ path('userMaker', {idDash: Dash.id})}}"><button class="btn btn-primary" type="button">Creer utilisateur</button></a>
-        </div>
-    </div>
+
     <div class="container">
         <form method="post" action="{{ path('dashboardShow', {idDash: Dash.id}) }}">
     <table class="table">
@@ -91,6 +89,18 @@
                 <button class="btn btn-primary" type="submit">submit</button>
             </p>
         </form>
+    </div>
+    <div class="container mt-4">
+        <div class="badge bg-primary text-wrap mb-2" style="width: 6rem;">
+            Users working on this project
+        </div>
+    </div>
+    <ul class="list-group">
+        {% for user in users %}
+        <li class="list-group-item">{{ user.email }}</li>
+        {% endfor %}
+        <li class="list-group-item"> </li>
+    </ul>
     </div>
     <script type="text/javascript">
 
