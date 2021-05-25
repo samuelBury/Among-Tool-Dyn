@@ -38,8 +38,9 @@ class CreateDashboardController extends AbstractController
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function createDash(Request $request, EntityManagerInterface $em, DashboardRepository $dashRepo,DroitDashRepository $droitDashRepo,UserRepository $repoUser): Response
+    public function createDash(Request $request,TravaillerSurRepository $posRepo, EntityManagerInterface $em, DashboardRepository $dashRepo,DroitDashRepository $droitDashRepo,UserRepository $repoUser): Response
     {
+
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $dashboardName= $request->request->get('DashboardName');
@@ -49,7 +50,14 @@ class CreateDashboardController extends AbstractController
             $alerte[]= ['text'=>'Enter a name','type'=>'warning'];
         }
         else{
-            if ($dashRepo->findByName($dashboardName)!==null){
+            $dashBoardUser =$this->getUser()->getDashboard($posRepo);
+            $dashNameAlreadyExist = false;
+            foreach ($dashBoardUser as $unDash){
+                if ($unDash->getName() == $dashboardName){
+                    $dashNameAlreadyExist = true;
+                }
+            }
+            if ($dashNameAlreadyExist== true){
                 $alerte []= ['text'=>'DashBoard name already exist','type'=>'warning'];
             }
             else{
@@ -63,12 +71,13 @@ class CreateDashboardController extends AbstractController
                 $em->persist($dash);
                 $em->flush();
                 $alerte []= ['text'=>'DashBoard '.$dashboardName.' is created','type'=>'success'];
+
+
             }
 
         }
 
-        dump($alerte);
-        dump($dashboardName);
+
         return $this->render('Dashboard/dashboard.html.twig', [
             'alertes' => $alerte,
         ]);

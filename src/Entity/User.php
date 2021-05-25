@@ -177,17 +177,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPseudo(): ?string
-    {
-        return $this->pseudo;
-    }
-
-    public function setPseudo(string $pseudo): self
-    {
-        $this->pseudo = $pseudo;
-
-        return $this;
-    }
 
     public function getRoles(): array
     {
@@ -239,6 +228,12 @@ class User implements UserInterface
                 $travaillerSur->setUser(null);
             }
         }
+
+        return $this;
+    }
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }

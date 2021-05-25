@@ -7,6 +7,8 @@ use App\Entity\Gerer;
 use App\Entity\PossederDroitDash;
 use App\Entity\User;
 use App\Repository\PossederDroitDashRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Swift_Mailer;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -24,54 +26,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/MakeUser/{idDash}", name="userMaker")
-     * @param DashboardRepository $dashRepo
-     * @param $idDash
-     * @return Response
-     */
-    public function index(DashboardRepository $dashRepo, $idDash,Request $request): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-            $droits = array();
-            $dash = $dashRepo->find($idDash);
-            foreach ($dash->getColonnes() as $uneColonne){
-                $lire =$request->request->get('lire'.$uneColonne->getName());
-                if (issset($lire)){
-                    $droits[]= $lire;
-                }
-                $ajoute =$request->request->get('ajout'.$uneColonne->getName());
-                if (issset($ajoute)){
-                    $droits[]= $ajoute;
-                }
-                $modifier =$request->request->get('modif'.$uneColonne->getName());
-                if (issset($modifier)){
-                    $droits[]= $modifier;
-                }
-                $supprimer =$request->request->get('sup'.$uneColonne->getName());
-                if (issset($supprimer)){
-                    $droits[]= $supprimer;
-                }
 
-
-            }
-        return $this->render('user/index.html.twig',['dash'=>$dash]);
-    }
 
     /**
-     * @Route("/User", name="users")
+     * @Route("/admin/User", name="users")
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param MailerInterface $mailer
+     * @param Swift_Mailer $mailer
      * @param Request $request
      * @param UserRepository $userRepository
      * @param DashboardRepository $dashboardRepository
      * @param DroitDashRepository $droitDashRepository
      * @param EntityManagerInterface $em
      * @param PossederDroitDashRepository $posRepo
-     * @param UserRepository $userRepo
      * @return Response
+     * @throws NonUniqueResultException
      */
-    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder,  \Swift_Mailer $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
+    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder,  Swift_Mailer $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
     {
 
 
@@ -92,10 +62,11 @@ class UserController extends AbstractController
         $emailLeader = $request->request->get('email');
         $passwordLeader = $request->request->get('password');
         $createDash = $request->request->get('1');
-        $configDash = $request->request->get('3');
-        $deleteDash = $request->request->get('4');
-        $addUser = $request->request->get('5');
+        $configDash = $request->request->get('2');
+        $deleteDash = $request->request->get('3');
+        $addUser = $request->request->get('4');
         $existingUser = $request->request->get("existingUser");
+        $isAdmin = $request->request->get('isAdmin');
 
 
 
@@ -105,31 +76,34 @@ class UserController extends AbstractController
             $user->setEmail($emailLeader);
             $user->setPassword($passwordEncoder->encodePassword($user,$passwordLeader));
             $em->persist($user);
+            if ($isAdmin=== 'on'){
+                $user->setRoles(['ROLE_ADMIN']);
+            }
 
 
 
             if($createDash === 'on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(1));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('CreateDashboard'));
                 $em->persist($possederDroitDash);
             }
             if($configDash==='on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(3));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('ConfigDashboard'));
                 $em->persist($possederDroitDash);
             }
             if($deleteDash==='on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(4));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('DeleteDashboard'));
                 $em->persist($possederDroitDash);
             }
             if($addUser==='on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(5));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('addUserToDashboard'));
                 $em->persist($possederDroitDash);
             }
             if ($deleteDash==null && $configDash==null&& $createDash==null){
@@ -159,25 +133,25 @@ class UserController extends AbstractController
             if($createDash === 'on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(1));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('CreateDashboard'));
                 $em->persist($possederDroitDash);
             }
             if($configDash==='on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(3));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('ConfigDashboard'));
                 $em->persist($possederDroitDash);
             }
             if($deleteDash==='on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(4));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('DeleteDashboard'));
                 $em->persist($possederDroitDash);
             }
             if($addUser==='on'){
                 $possederDroitDash = new PossederDroitDash();
                 $possederDroitDash->setUser($user);
-                $possederDroitDash->setDroitDash($droitDashRepository->find(5));
+                $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('addUserToDashboard'));
                 $em->persist($possederDroitDash);
             }
             if ($deleteDash==null && $configDash==null&& $createDash==null){

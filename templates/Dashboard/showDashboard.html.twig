@@ -99,12 +99,52 @@
         {% for user in users %}
         <li class="list-group-item">{{ user.email }}</li>
         {% endfor %}
-        <li class="list-group-item"> </li>
+        <li class="list-group-item"><i class="fas fa-plus" id="addUser"></i><i class="fas fa-minus" id="noAddUser" style="display: none"></i></li>
     </ul>
+    <form>
+    <table class="table" id="newUser" style="display: none">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Write</th>
+            <th scope="col">Read</th>
+            <th scope="col">Modify</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for colonne in colonnes %}
+        <tr>
+            <th scope="row">{{ colonne.name }}</th>
+            <td><input type="checkbox" id="scales" name="write{{ colonne.name }}"></td>
+            <td><input type="checkbox" id="scales" name="read{{ colonne.name }}"></td>
+            <td><input type="checkbox" id="scales" name="modify{{ colonne.name }}"></td>
+            <td><input type="checkbox" id="scales" name="delete{{ colonne.name }}"></td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </form>
     </div>
     <script type="text/javascript">
 
-
+        function displayFormNewUser(){
+            var form = document.getElementById('newUser');
+            form.style.display = "block";
+            var plus = document.getElementById('addUser');
+            plus.style.display ="none";
+            var moins = document.getElementById('noAddUser');
+            moins.style.display ="block";
+        }
+        function undisplayFormNewUser(){
+            var form = document.getElementById('newUser');
+            form.style.display = "none";
+            var plus = document.getElementById('addUser');
+            plus.style.display ="block";
+            var moins = document.getElementById('noAddUser');
+            moins.style.display ="none";
+        }
 
         function  addLigneForm(){
             j++;
@@ -124,6 +164,9 @@
             body.insertAdjacentElement('beforeend',tr);
         }
         document.getElementById('addLigne').addEventListener("click",addLigneForm);
+        document.getElementById('addUser').addEventListener("click",displayFormNewUser);
+        document.getElementById('noAddUser').addEventListener("click",undisplayFormNewUser);
+
 
     </script>
 
