@@ -6,6 +6,7 @@ use App\Entity\Dashboard;
 use App\Entity\Gerer;
 use App\Entity\PossederDroitDash;
 use App\Entity\User;
+use App\Repository\DroitRepository;
 use App\Repository\PossederDroitDashRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Swift_Mailer;
@@ -41,7 +42,7 @@ class UserController extends AbstractController
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder,  Swift_Mailer $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
+    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder,   MailerInterface $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
     {
 
 
@@ -113,17 +114,19 @@ class UserController extends AbstractController
             else{
 
                 $em->flush();
-                $message = (new \Swift_Message('hello Email'))
-                    ->setFrom("samy.bury@gmail.com")
-                    ->setTo($emailLeader)
+                $email = new Email();
+                $email->to($emailLeader)
+                    ->from("samy.bury@gmail.com")
+                    ->subject('hello Email')
+                    ->html("<h1>votre mot de passe est : ".$passwordLeader."</h1>");
 
 
-                    ->setBody(
-                        $this->renderView('email/newUser.html.twig',
-                            ['name'=>$emailLeader, 'password'=>$passwordLeader]
-                        )
-                    );
-                $mailer->send($message);
+
+
+
+
+
+                $mailer->send($email);
 
             }
 
@@ -178,18 +181,58 @@ class UserController extends AbstractController
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         return $this->render('user/dashLeader.html.twig',["users"=>$users,"erreur"=>$erreur]);
+    }
+
+    /**
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param Swift_Mailer $mailer
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param DashboardRepository $dashboardRepository
+     * @param DroitDashRepository $droitDashRepository
+     * @param EntityManagerInterface $em
+     * @param PossederDroitDashRepository $posRepo
+     * @return Response
+     * @Route("/userMaker/{idDash}", name="userMaker")
+     */
+    public function MakeUserDashboard(UserPasswordEncoderInterface $passwordEncoder,MailerInterface $mailer,$idDash,DroitRepository $droitRepository, Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
+    {
+        $email=$request->request->get('email');
+        $password=$request->request->get('password');
+
+        if ($email!=null && $password!=null){
+            $user= new User();
+            $user->setEmail($email);
+            $user->setPassword($passwordEncoder->encodePassword($user,$password));
+            $em->persist($user);
+
+            $dashboard = $dashboardRepository->find($idDash);
+            foreach ($dashboard->getColonnes() as $uneColonne){
+                $readColonne = $request->request->get('read'.$uneColonne->getName());
+                $writeColonne = $request->request->get('write'.$uneColonne->getName());
+                $modifyColonne = $request->request->get('modify'.$uneColonne->getName());
+                $deleteColonne = $request->request->get('delete'.$uneColonne->getName());
+                if ($readColonne !==null){
+                    $gerer = new Gerer();
+                    $gerer->setUser($user);
+                    $gerer->setColonne($uneColonne);
+                    $lire=$droitRepository->findOneByName('Lire');
+                    $gerer->setDroit($lire);
+                    $em->persist($gerer);
+                }
+            }
+            $emails= 'samy.bury@gmail.com';
+            $email= new Email();
+            $email->from("samy.bury@gmail.com")
+                ->to($emails)
+                ->priority(Email::PRIORITY_HIGH)
+                ->subject('le sujet')
+
+                ->html("<h1>votre mot de passe est : ".$password."</h1>");
+            $mailer->send($email);
+
+
+        }
     }
 }
