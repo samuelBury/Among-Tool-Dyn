@@ -78,7 +78,7 @@ class CreateDashboardController extends AbstractController
         }
 
 
-        return $this->render('Dashboard/dashboard.html.twig', [
+        return $this->render('Dashboard/Dashboard.html.twig', [
             'alertes' => $alerte,
         ]);
     }
