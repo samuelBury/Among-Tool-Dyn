@@ -4,9 +4,6 @@
     <list default="true" id="c9226acf-df02-4e9d-8496-28e1c3bd2ab2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/DroitRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/DroitRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Dashboard/showDashboard.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Dashboard/showDashboard.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +140,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../among-tool" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -196,6 +193,8 @@
       <workItem from="1621585653974" duration="9640000" />
       <workItem from="1621928570427" duration="8197000" />
       <workItem from="1621937255549" duration="9000" />
+      <workItem from="1622121056273" duration="1458000" />
+      <workItem from="1622144911121" duration="384000" />
     </task>
     <servers />
   </component>
