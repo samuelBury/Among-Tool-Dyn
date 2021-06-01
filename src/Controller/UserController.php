@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Services\AuthentificationManager;
 use App\Entity\Dashboard;
 use App\Entity\Gerer;
 use App\Entity\PossederDroitDash;
@@ -32,7 +32,8 @@ class UserController extends AbstractController
     /**
      * @Route("/admin/User", name="users")
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param Swift_Mailer $mailer
+     * @param AuthentificationManager $authManage
+     * @param MailerInterface $mailer
      * @param Request $request
      * @param UserRepository $userRepository
      * @param DashboardRepository $dashboardRepository
@@ -41,15 +42,14 @@ class UserController extends AbstractController
      * @param PossederDroitDashRepository $posRepo
      * @return Response
      * @throws NonUniqueResultException
+     * @throws TransportExceptionInterface
      */
-    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder,   MailerInterface $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
+    public function MakeUser(UserPasswordEncoderInterface $passwordEncoder,AuthentificationManager $authManage,  MailerInterface $mailer,Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
     {
 
 
         $erreur=null;
-        $mailObject = "Among-tool password";
-        $mailMessage = "Votre mot de passe pour acceder à votre espace Among-tool est : ";
-        $mailMessage2 = " Vous pourrez ensuite changer votre mot de passe depuis votre espace";
+        $droitAjouter = array();
 
         /* recuperer les dashboards*/
 
@@ -61,21 +61,24 @@ class UserController extends AbstractController
 
         /* creer un leader-dash */
         $emailLeader = $request->request->get('email');
-        $passwordLeader = $request->request->get('password');
+
         $createDash = $request->request->get('1');
         $configDash = $request->request->get('2');
         $deleteDash = $request->request->get('3');
         $addUser = $request->request->get('4');
-        $existingUser = $request->request->get("existingUser");
+        $eCreateDash = $request->request->get('e1');
+        $eConfigDash = $request->request->get('e2');
+        $eDeleteDash = $request->request->get('e3');
+        $eAddUser = $request->request->get('e4');
+        $existingUserId = $request->request->get("existingUser");
+        $existingUser = $userRepository->find((int)$existingUserId);
         $isAdmin = $request->request->get('isAdmin');
 
 
+        if ($emailLeader != null){
 
-        if ($emailLeader != null && $passwordLeader!=null ){
-
-            $user = new User();
+            $user = new User($authManage, $passwordEncoder);
             $user->setEmail($emailLeader);
-            $user->setPassword($passwordEncoder->encodePassword($user,$passwordLeader));
             $em->persist($user);
             if ($isAdmin=== 'on'){
                 $user->setRoles(['ROLE_ADMIN']);
@@ -118,61 +121,64 @@ class UserController extends AbstractController
                 $email->to($emailLeader)
                     ->from("samy.bury@gmail.com")
                     ->subject('hello Email')
-                    ->html("<h1>votre mot de passe est : ".$passwordLeader."</h1>");
-
-
-
-
-
-
+                    ->html("<h1>votre mot de passe est : ".$user->getReelPassword()."</h1>");
 
                 $mailer->send($email);
 
             }
 
-            }
+        }
         elseif ($existingUser!==null){
             $user = $userRepository->findByEmail($existingUser);
-            if($createDash === 'on'){
+            if($eCreateDash === 'on'){
                 $possederDroitDash = new PossederDroitDash();
-                $possederDroitDash->setUser($user);
+                $possederDroitDash->setUser($existingUser);
                 $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('CreateDashboard'));
                 $em->persist($possederDroitDash);
+                $droitAjouter[]= "Create dashboard ";
             }
-            if($configDash==='on'){
+            if($eConfigDash==='on'){
                 $possederDroitDash = new PossederDroitDash();
-                $possederDroitDash->setUser($user);
+                $possederDroitDash->setUser($existingUser);
                 $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('ConfigDashboard'));
                 $em->persist($possederDroitDash);
+                $droitAjouter[]= "Configurer dashboard ";
             }
-            if($deleteDash==='on'){
+            if($eDeleteDash==='on'){
                 $possederDroitDash = new PossederDroitDash();
-                $possederDroitDash->setUser($user);
+                $possederDroitDash->setUser($existingUser);
                 $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('DeleteDashboard'));
                 $em->persist($possederDroitDash);
+                $droitAjouter[]= "Delete dashboard ";
             }
-            if($addUser==='on'){
+            if($eAddUser==='on'){
                 $possederDroitDash = new PossederDroitDash();
-                $possederDroitDash->setUser($user);
+                $possederDroitDash->setUser($existingUser);
                 $possederDroitDash->setDroitDash($droitDashRepository->findOneByLibelle('addUserToDashboard'));
                 $em->persist($possederDroitDash);
+                $droitAjouter[]= "add user to dashboard";
             }
-            if ($deleteDash==null && $configDash==null&& $createDash==null){
+            if ($eDeleteDash==null && $eConfigDash==null&& $eCreateDash==null){
                 $erreur = "aucun droit n'a été accorder";
 
             }
             else{
-                $message = (new \Swift_Message('hello Email'))
-                    ->setFrom("samy.bury@gmail.com")
-                    ->setTo($emailLeader)
+                $bodyEmail = "<h1>les droits ";
+                foreach ($droitAjouter as $undroit){
+                    $bodyEmail.=$undroit;
+                }
+                $bodyEmail.="</h1>";
 
 
-                    ->setBody(
-                        $this->renderView('email/newUser.html.twig',
-                            ['name'=>$emailLeader, 'password'=>$passwordLeader]
-                        )
-                    );
-                $mailer->send($message);
+                $email = new Email();
+                $email->to($existingUser->getEmail())
+                    ->from("samy.bury@gmail.com")
+                    ->subject('ajout de droit')
+                    ->html($bodyEmail);
+
+                $mailer->send($email);
+
+                $em->flush();
             }
         }
 
@@ -186,7 +192,10 @@ class UserController extends AbstractController
 
     /**
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param Swift_Mailer $mailer
+     * @param AuthentificationManager $authManage
+     * @param MailerInterface $mailer
+     * @param $idDash
+     * @param DroitRepository $droitRepository
      * @param Request $request
      * @param UserRepository $userRepository
      * @param DashboardRepository $dashboardRepository
@@ -194,17 +203,18 @@ class UserController extends AbstractController
      * @param EntityManagerInterface $em
      * @param PossederDroitDashRepository $posRepo
      * @return Response
+     * @throws TransportExceptionInterface
      * @Route("/userMaker/{idDash}", name="userMaker")
      */
-    public function MakeUserDashboard(UserPasswordEncoderInterface $passwordEncoder,MailerInterface $mailer,$idDash,DroitRepository $droitRepository, Request $request,UserRepository $userRepository,DashboardRepository $dashboardRepository, DroitDashRepository $droitDashRepository,EntityManagerInterface $em, PossederDroitDashRepository $posRepo): Response
+    public function MakeUserDashboard(UserPasswordEncoderInterface $passwordEncoder, AuthentificationManager $authManage, MailerInterface $mailer,$idDash,DroitRepository $droitRepository, Request $request,DashboardRepository $dashboardRepository,EntityManagerInterface $em): Response
     {
         $email=$request->request->get('email');
         $password=$request->request->get('password');
 
         if ($email!=null && $password!=null){
-            $user= new User();
+            $user= new User($authManage, $passwordEncoder);
             $user->setEmail($email);
-            $user->setPassword($passwordEncoder->encodePassword($user,$password));
+
             $em->persist($user);
 
             $dashboard = $dashboardRepository->find($idDash);

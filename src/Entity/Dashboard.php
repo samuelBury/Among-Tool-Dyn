@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -82,6 +83,18 @@ class Dashboard
     public function getColonnes(): Collection
     {
         return $this->colonnes;
+    }
+
+    /**
+     * @param User $user
+     * @param EntityManagerInterface $em
+     */
+    public function addUser(User $user, ObjectManager $em){
+        $travaillerSur = new TravaillerSur();
+        $travaillerSur->setUser($user);
+        $travaillerSur->setDashboard($this);
+        $em->persist($travaillerSur);
+
     }
 
     public function addColonne(Colonne $colonne): self

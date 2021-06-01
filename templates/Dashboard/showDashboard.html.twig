@@ -18,7 +18,7 @@
 
     <div class="container">
         <form method="post" action="{{ path('dashboardShow', {idDash: Dash.id}) }}">
-    <table class="table">
+    <table class="table table-bordered mt-4">
         <thead>
         <tr>
             <script type="text/javascript">
@@ -101,7 +101,7 @@
         {% endfor %}
         <li class="list-group-item"><i class="fas fa-plus" id="addUser"></i><i class="fas fa-minus" id="noAddUser" style="display: none"></i></li>
     </ul>
-    <form method="post" action="{{ path('userMaker', {idDash: Dash.id}) }}">
+    <form method="post" action="{{ path('userMaker', {idDash: Dash.id}) }}" id="newUser" style="display: none">
         <div class="form-group">
 
             <label for="exampleInputEmail1">Email address</label>
@@ -120,7 +120,7 @@
                 <option value="{{ user.id }}">{{ user.email }}</option>
             {% endfor %}
         </select>
-    <table class="table" id="newUser" style="display: none">
+    <table class="table table-bordered" id="newUser" style="display: none">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -184,7 +184,6 @@
         document.getElementById('addLigne').addEventListener("click",addLigneForm);
         document.getElementById('addUser').addEventListener("click",displayFormNewUser);
         document.getElementById('noAddUser').addEventListener("click",undisplayFormNewUser);
-
 
     </script>
 

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Services\AuthentificationManager;
 use App\Repository\GererRepository;
 use App\Repository\PossederDroitDashRepository;
 use App\Repository\TravaillerSurRepository;
@@ -53,14 +55,23 @@ class User implements UserInterface
      */
     private $travaillerSurs;
 
+    private $reelPassword;
 
 
-    public function __construct()
+
+    public function __construct(AuthentificationManager $authManage, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->gerer = new ArrayCollection();
         $this->possederDroitDashes = new ArrayCollection();
         $this->travaillerSurs = new ArrayCollection();
+        $password =$authManage->chaine_aleatoire(8);
+        $this->reelPassword =$password;
+        $this->password =$passwordEncoder->encodePassword($this,$password );
 
+    }
+    public function getReelPassword(): ?string
+    {
+        return $this->reelPassword;
     }
 
     public function getId(): ?int
