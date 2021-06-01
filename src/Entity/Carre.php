@@ -32,6 +32,11 @@ class Carre
      */
     private $colonne;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Doc::class, mappedBy="carre", cascade={"persist", "remove"})
+     */
+    private $doc;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,23 @@ class Carre
     public function setColonne(?Colonne $colonne): self
     {
         $this->colonne = $colonne;
+
+        return $this;
+    }
+
+    public function getDoc(): ?Doc
+    {
+        return $this->doc;
+    }
+
+    public function setDoc(Doc $doc): self
+    {
+        // set the owning side of the relation if necessary
+        if ($doc->getCarre() !== $this) {
+            $doc->setCarre($this);
+        }
+
+        $this->doc = $doc;
 
         return $this;
     }

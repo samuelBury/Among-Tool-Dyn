@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Document;
+use App\Entity\Doc;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Document|null find($id, $lockMode = null, $lockVersion = null)
- * @method Document|null findOneBy(array $criteria, array $orderBy = null)
- * @method Document[]    findAll()
- * @method Document[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Doc|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Doc|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Doc[]    findAll()
+ * @method Doc[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DocumentRepository extends ServiceEntityRepository
+class DocRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Document::class);
+        parent::__construct($registry, Doc::class);
     }
 
     // /**
-    //  * @return Document[] Returns an array of Document objects
+    //  * @return Doc[] Returns an array of Doc objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class DocumentRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Document
+    public function findOneBySomeField($value): ?Doc
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.exampleField = :val')

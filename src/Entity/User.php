@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Services\AuthentificationManager;
+use App\Service\AuthentificationManager;
 use App\Repository\GererRepository;
 use App\Repository\PossederDroitDashRepository;
 use App\Repository\TravaillerSurRepository;

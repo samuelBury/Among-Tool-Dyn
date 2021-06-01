@@ -10,7 +10,7 @@ use App\Entity\DroitDash;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Services\AuthentificationManager;
+use App\Service\AuthentificationManager;
 
 class AppFixtures extends Fixture
 {

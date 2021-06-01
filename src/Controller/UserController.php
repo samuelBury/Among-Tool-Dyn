@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-use App\Services\AuthentificationManager;
+use App\Service\AuthentificationManager;
 use App\Entity\Dashboard;
 use App\Entity\Gerer;
 use App\Entity\PossederDroitDash;
@@ -119,7 +119,7 @@ class UserController extends AbstractController
                 $em->flush();
                 $email = new Email();
                 $email->to($emailLeader)
-                    ->from("samy.bury@gmail.com")
+                    ->from("among.friends.messagerie@gmail.com")
                     ->subject('hello Email')
                     ->html("<h1>votre mot de passe est : ".$user->getReelPassword()."</h1>");
 
@@ -172,7 +172,7 @@ class UserController extends AbstractController
 
                 $email = new Email();
                 $email->to($existingUser->getEmail())
-                    ->from("samy.bury@gmail.com")
+                    ->from("among.friends.messagerie@gmail.com")
                     ->subject('ajout de droit')
                     ->html($bodyEmail);
 
@@ -234,7 +234,7 @@ class UserController extends AbstractController
             }
             $emails= 'samy.bury@gmail.com';
             $email= new Email();
-            $email->from("samy.bury@gmail.com")
+            $email->from("among.friends.messagerie@gmail.com")
                 ->to($emails)
                 ->priority(Email::PRIORITY_HIGH)
                 ->subject('le sujet')
