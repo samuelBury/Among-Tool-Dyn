@@ -1,0 +1,54 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateDashboardController!{% endblock %}
+
+{% block body %}
+<div class="container">
+
+
+<form method="post" action="{{ path('adduser', {idDash: Dash.id}) }}" id="newUser" >
+    <div class="form-group">
+
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+
+
+    <label for="inputGroupSelect">Email address</label>
+    <select class="custom-select" name="existingUser" id="inputGroupSelect">
+        <option selected></option>
+        {% for user in users %}
+            <option value="{{ user.id }}">{{ user.email }}</option>
+        {% endfor %}
+    </select>
+    <table class="table table-bordered" id="newUser" >
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Write</th>
+            <th scope="col">Read</th>
+            <th scope="col">Modify</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for colonne in Dash.colonnes %}
+            <tr>
+                <th scope="row">{{ colonne.name }}</th>
+                <td><input type="checkbox" id="scales" name="write{{ colonne.name }}"></td>
+                <td><input type="checkbox" id="scales" name="read{{ colonne.name }}"></td>
+                <td><input type="checkbox" id="scales" name="modify{{ colonne.name }}"></td>
+                <td><input type="checkbox" id="scales" name="delete{{ colonne.name }}"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+    <button type="submit" class="btn btn-primary">Primary</button>
+</form>
+</div>
+{% endblock %}

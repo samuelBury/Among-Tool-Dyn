@@ -73,9 +73,10 @@ class UserController extends AbstractController
         $existingUserId = $request->request->get("existingUser");
         $existingUser = $userRepository->find((int)$existingUserId);
         $isAdmin = $request->request->get('isAdmin');
+        $user= $userRepository->findByEmail($emailLeader);
 
 
-        if ($emailLeader != null){
+        if ($emailLeader != null && !isset($user)){
 
             $user = new User($authManage, $passwordEncoder);
             $user->setEmail($emailLeader);

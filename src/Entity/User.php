@@ -248,4 +248,19 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getDroit(Dashboard $dashboard, GererRepository $gererRepository){
+        $droit = array();
+        $gerers=$gererRepository->findByUser($this);
+        foreach ($dashboard->getColonnes() as $uneColonne){
+            foreach ($gerers as $gerer){
+                if ($gerer->getColonne() === $uneColonne){
+                    $droit[]= $uneColonne->getName().$gerer->getDroit()->getLibelle();
+                }
+
+            }
+
+        }
+        return $droit;
+    }
 }

@@ -45,18 +45,25 @@
         <tr>
 
             {% for case in ligne.carre %}
+                {% dump(case.colonne.name ~ 'Lire') %}
+                {% if case.colonne.name ~ 'Lire' in Droits %}
 
             <td>
                 {% if case.colonne.type == 'date' %}
                     <div class="d-flex flex-column bd-highlight mb-3">
                     <label>{{ case.Valeur|date("d/m/Y") }}</label>
+                    {% if case.colonne.name ~ 'Ecrire' in Droits %}
                         <input type="{{ case.colonne.type }}"  name="{{ case.id }}?{{ case.colonne.name }}{{ i }}a" ></div>
+                    {% endif%}
                 {% else %}
                     <div class="d-flex flex-column bd-highlight mb-3">
                     <label>{{ case.Valeur }}</label>
+                    {% if case.colonne.name ~ 'Ecrire' in Droits %}
                     <input type="{{ case.colonne.type }}"  name="{{ case.id }}?{{ case.colonne.name }}{{ i }}a"></div>
+                        {% endif %}
                     {% endif %}
             </td>
+                {% endif %}
 
 
 
@@ -66,11 +73,13 @@
 
 
             {% endfor %}
+            {% if case.colonne.name ~ 'Supprimer' in Droits %}
             <td>
                 <div class="d-flex flex-column bd-highlight mb-3">
                 <a href="{{ path('delLigne',{idDash: Dash.id, ligneId: ligne.id}) }}"><button  type="button" class="btn btn-outline-dark"><i class="fas fa-minus"></i></button></a>
                 </div>
             </td>
+            {% endif %}
             {% set i =i+1 %}
         </tr>
 
@@ -99,52 +108,11 @@
         {% for user in users %}
         <li class="list-group-item">{{ user.email }}</li>
         {% endfor %}
-        <li class="list-group-item"><i class="fas fa-plus" id="addUser"></i><i class="fas fa-minus" id="noAddUser" style="display: none"></i></li>
+
     </ul>
-    <form method="post" action="{{ path('userMaker', {idDash: Dash.id}) }}" id="newUser" style="display: none">
-        <div class="form-group">
 
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
+    <a href="{{ path('adduser',{idDash: Dash.id}) }}"><button type="button" class="btn btn-primary">Add worker</button></a>
 
-        <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-        </div>
-        <label for="inputGroupSelect">Email address</label>
-        <select class="custom-select" name="existingUser" id="inputGroupSelect">
-            <option selected></option>
-            {% for user in users %}
-                <option value="{{ user.id }}">{{ user.email }}</option>
-            {% endfor %}
-        </select>
-    <table class="table table-bordered" id="newUser" style="display: none">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Write</th>
-            <th scope="col">Read</th>
-            <th scope="col">Modify</th>
-            <th scope="col">Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for colonne in colonnes %}
-        <tr>
-            <th scope="row">{{ colonne.name }}</th>
-            <td><input type="checkbox" id="scales" name="write{{ colonne.name }}"></td>
-            <td><input type="checkbox" id="scales" name="read{{ colonne.name }}"></td>
-            <td><input type="checkbox" id="scales" name="modify{{ colonne.name }}"></td>
-            <td><input type="checkbox" id="scales" name="delete{{ colonne.name }}"></td>
-        </tr>
-        {% endfor %}
-
-        </tbody>
-    </table>
-    </form>
-    </div>
     <script type="text/javascript">
 
         function displayFormNewUser(){

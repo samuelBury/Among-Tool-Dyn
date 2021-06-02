@@ -124,6 +124,8 @@ class Dashboard
             $lignes= array();
             $i =0;
 
+            
+
             foreach ($form as $unForm){
                 unset($form[array_search("", $form, true)]);
             }
@@ -185,7 +187,6 @@ class Dashboard
                     $uneligne->setDashboard($dashRepo->find($idDash));
                     $lignes[]= $uneligne;
 
-                    $uneligne = new Ligne();
                 }
 
 
